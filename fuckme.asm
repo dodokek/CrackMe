@@ -6,7 +6,10 @@ org 100h
 locals @@			; Сравнение db и vd ->
 
 
-Start:     
+Start:  
+        jmp @@skip
+        PasswordBuffer  db 10d dup(11d)
+        @@skip:
         ; read str from input
         mov di, offset PasswordBuffer
         call getline
@@ -112,7 +115,6 @@ Puts	proc
         ret
         endp
 
-PasswordBuffer  db 10d dup(11d)
 CorrectPassword db "Yapidoras$"
 CorrectPhare    db "Correct Password!$"
 IncorrectPhrase db "You cock sucker!$"
