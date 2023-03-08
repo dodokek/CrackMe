@@ -7,16 +7,15 @@ locals @@			; Сравнение db и vd ->
 
 
 Start:  
-        jmp @@skip
-        PasswordBuffer  db 10d dup(11d)
-        @@skip:
+
         ; read str from input
         mov di, offset PasswordBuffer
         call getline
         ; compare strings
-        mov di, offset PasswordBuffer
-        mov si, offset CorrectPassword
-        call strcmp
+        mov di, offset PasswordBuffer   ; getting hash of input line
+        call get_hash
+        
+        cmp ax, CorrectPasswordHash     ; comparing with hash
         jne @@wrong_password
 
         mov dx, offset CorrectPhare
@@ -33,18 +32,42 @@ Start:
         mov ax, 4c00h
         int 21h
 
+;------------------------------------------------
+;   Ultra super mega complicated hash func
+;   Returns hash of string in ax
+;------------------------------------------------
+;	Entry:	  di: pointer to string you want to be hashed
+;	Destroys: ax, cx
+;   Returns:  Hash in ax
+;------------------------------------------------
+get_hash    proc
 
+            xor ax, ax  ; ax = 0
+            mov cx, 5   ; starting to salt
+    @@L1:
+            add ax, [di]   ; just some really difficult hashing algorithms
+            mov bx, cx
+            add bx, 04eh
 
+            add ax, bx 
+
+            inc di
+            inc cx
+            cmp byte ptr [di], "$"
+            jne @@L1
+
+            ret
+            endp
 
 ;------------------------------------------------
 ;   Compares  2 strings
 ;------------------------------------------------
 ;	Entry:	  si: pointer to str1
 ;             di: pointer to str2
-;       Exit:     None
+;   Exit:     None
 ;	Expects:  nice cock, es = ds
 ;	Destroys: cx
-;       Returns:  Flags will be set according to comparison
+;   Returns:  Flags will be set according to comparison
 ;------------------------------------------------
 strcmp      proc
 
@@ -115,8 +138,9 @@ Puts	proc
         ret
         endp
 
-CorrectPassword db "Yapidoras$"
+CorrectPasswordHash = 7dbbh
 CorrectPhare    db "Correct Password!$"
 IncorrectPhrase db "You cock sucker!$"
+PasswordBuffer  db 10d dup(11d)
 
 end Start
