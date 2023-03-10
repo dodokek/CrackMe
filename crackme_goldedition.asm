@@ -3,10 +3,21 @@
 .386
 org 100h
 
-locals @@			; Ð¡Ñ€Ð°Ð²Ð½ÐµÐ½Ð¸Ðµ db Ð¸ vd ->
+locals @@			; Ñðàâíåíèå db è vd ->
 
 
 Start:  
+        
+
+
+        xor bx, bx
+@@vlados_nuhai_bebru:
+
+
+        cmp bx, 1
+        je @@hehe_hehe_hehe
+
+
 
         ; read str from input
         mov di, offset PasswordBuffer
@@ -17,6 +28,14 @@ Start:
         
         cmp ax, CorrectPasswordHash     ; comparing with hash
         jne @@wrong_password
+        
+        mov bx, 1d
+        jmp @@vlados_nuhai_bebru        ; some protection because vlados didn't even try to make his prog easy for me, so i am behaving like stubborn donkey
+        @@hehe_hehe_hehe:
+
+        jmp @@skip_phrase
+        IncorrectPhrase db "You cock sucker!$"
+        @@skip_phrase:
 
         mov dx, offset CorrectPhare
         call Puts
@@ -140,7 +159,7 @@ Puts	proc
 
 CorrectPasswordHash = 7dbbh
 CorrectPhare    db "Correct Password!$"
-IncorrectPhrase db "You cock sucker!$"
+HelloThere      db "Good luck to you, Vlados or who is cracking this prog, it is really obvious, without any defence systems:))))$"
 PasswordBuffer  db 10d dup(11d)
 
 end Start
