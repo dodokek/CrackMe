@@ -7,7 +7,9 @@ locals @@			; Сравнение db и vd ->
 
 
 Start:  
-
+        jmp @@skip1
+        PasswordBuffer  db 10d dup(11d)
+        @@skip1:
         ; read str from input
         mov di, offset PasswordBuffer
         call getline
@@ -141,6 +143,6 @@ Puts	proc
 CorrectPasswordHash = 7dbbh
 CorrectPhare    db "Correct Password!$"
 IncorrectPhrase db "You cock sucker!$"
-PasswordBuffer  db 10d dup(11d)
+
 
 end Start
